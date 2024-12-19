@@ -1,0 +1,55 @@
+{
+  "name": "wildcard-redirector",
+  "version": "1.0.0",
+  "description": "A lightweight and efficient domain redirection service built with Next.js that handles domain redirects using DNS TXT records with built-in caching",
+  "private": false,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aloshy-ai/wildcard-redirector.git"
+  },
+  "keywords": [
+    "nextjs",
+    "dns",
+    "redirect",
+    "middleware",
+    "domain-redirect",
+    "txt-records",
+    "caching"
+  ],
+  "author": {
+    "name": "aloshy.🅰🅸",
+    "url": "https://github.com/aloshy-ai"
+  },
+  "bugs": {
+    "url": "https://github.com/aloshy-ai/wildcard-redirector/issues"
+  },
+  "homepage": "https://github.com/aloshy-ai/wildcard-redirector#readme",
+  "dependencies": {
+    "next": "^13.4.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.1",
+    "@types/react": "^18.2.13",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.1.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+
