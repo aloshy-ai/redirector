@@ -47,7 +47,7 @@ jobs:
         run: yarn test
 
       - name: Report status
-        if: always()
+        if: github.event_name != 'pull_request' && !env.ACT # Only run on real GitHub Actions, not locally with act
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
