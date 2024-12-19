@@ -1,100 +1,36 @@
-# Next.js DNS-Based Redirect Service
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A lightweight domain redirection service that uses DNS TXT records to configure redirects. When someone visits your domain, the service checks for a special TXT record and redirects them to the destination domain while preserving the path and query parameters.
+## Getting Started
 
-## How It Works
-
-The service uses DNS TXT records to store redirect configurations. For each domain you want to redirect, you add a TXT record with a special prefix that specifies the destination domain.
-
-### Flow Diagram
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Browser
-    participant DNS
-    participant Service
-    participant Cache
-
-    User->>Browser: Visit source-domain.com/blog/post-1
-    Browser->>Service: Request source-domain.com/blog/post-1
-    Service->>DNS: Lookup _redirect.source-domain.com
-    DNS-->>Service: TXT "destination=destination-domain.com"
-    Service->>Browser: 301 Redirect to destination-domain.com/blog/post-1
-    Browser->>User: Show destination-domain.com/blog/post-1
-```
-
-## Setup Instructions
-
-### 1. Deploy the Edge Function
-
-Deploy this service to a platform that supports Edge Functions (like Vercel):
+First, run the development server:
 
 ```bash
-# Deploy to Vercel
-vercel deploy
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### 2. Configure Your Domain
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-1. Point your domain (source-domain.com) to the deployed edge function on Vercel:
-   ```dns
-   # DNS Configuration for Vercel
-   *.source-domain.com.      IN    CNAME    cname.vercel-dns.com.
-   ```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-2. Add the TXT record for redirection:
-   ```dns
-   _redirect.source-domain.com.    IN    TXT    "destination=destination-domain.com"
-   ```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-3. Verify domain ownership in Vercel dashboard:
-   ```dns
-   _vercel.source-domain.com.    IN    TXT    "{verification-code}"
-   ```
+## Learn More
 
-### Example Flow
+To learn more about Next.js, take a look at the following resources:
 
-```plaintext
-Setup:
-1. You want to redirect: source-domain.com → destination-domain.com
-2. Deploy this edge function and point source-domain.com to it
-3. Add a TXT record to source-domain.com's DNS:
-   _redirect.source-domain.com  TXT  "destination=destination-domain.com"
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Redirect Process:
-1. User visits: source-domain.com/blog/post-1?id=123
-2. Service reads TXT record: _redirect.source-domain.com
-3. Finds destination: destination-domain.com
-4. Redirects to: destination-domain.com/blog/post-1?id=123
-   - Preserves the entire path (/blog/post-1)
-   - Preserves all query parameters (?id=123)
-   - Uses 301 (permanent) redirect
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### DNS Configuration
+## Deploy on Vercel
 
-```mermaid
-graph LR
-    A[source-domain.com] -->|Points to| B[Edge Function]
-    A -->|Add TXT record| C[_redirect.source-domain.com]
-    C -->|Contains| D["destination=destination-domain.com"]
-    B -->|Reads| C
-    B -->|Redirects to| E[destination-domain.com]
-```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-### Features
-
-- 🎯 Redirects entire domains using DNS configuration
-- 🛣️ Preserves all URL paths and query parameters
-- 🔄 301 permanent redirects for better SEO
-- 🌐 Works with any DNS provider
-- ⚡ Fast middleware-based routing
-- 🌍 Edge function deployment for global performance
-
-### Supported Platforms
-
-- ▲ Vercel
-- 👷 Cloudflare Workers
-- 🔥 Firebase Hosting
-- Any platform supporting Edge Functions/Middleware
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

@@ -1,0 +1,9 @@
+{
+  "pull_request": {
+    "draft": false,
+    "base": {
+      "ref": "master"
+    }
+  },
+  "action": "opened"
+}
