@@ -1,43 +1,66 @@
 name: CI
 
 on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
-    branches: [ main ]
+    branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/**'
+      - '!.github/workflows/**'
 
 jobs:
   test:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-    - name: Run tests
-      run: npm test
+      - name: Type check
+        run: yarn type-check
 
-    - name: Report status
-      if: always()
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          const { owner, repo } = context.repo;
-          const { sha } = context.payload;
-          const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
-          github.rest.repos.createCommitStatus({
-            owner,
-            repo,
-            sha,
-            state,
-            target_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-            description: 'Tests ${{ job.status }}',
-            context: 'tests'
-          });
+      - name: Format check
+        run: yarn format:check
 
+      - name: Lint
+        run: yarn lint
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Report status
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo;
+            const { sha } = context.payload;
+            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            github.rest.repos.createCommitStatus({
+              owner,
+              repo,
+              sha,
+              state,
+              target_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+              description: 'Tests ${{ job.status }}',
+              context: 'tests'
+            });
